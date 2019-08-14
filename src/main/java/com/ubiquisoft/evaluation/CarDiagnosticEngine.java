@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 public class CarDiagnosticEngine {
-
+	/*I WANTED TO KEEP THIS STUPID SIMPLE, SURE THERE ARE OTHER WAYS TO DO IT.
+	  I.E. LAMDAS, STREAMS, FILTERS, ETC ...
+	  SO I KEPT THAT TO THE MINIMUM AND
+	*/
 	public void executeDiagnostics(Car car) {
 		List<String> missingFields = car.getMissingCarFields();
 		if (!missingFields.isEmpty()) {
@@ -27,11 +30,17 @@ public class CarDiagnosticEngine {
 			System.exit(-1);
 		}
 
+		boolean exit = false;
 		for (Part part : car.getParts()) {
 			if (!part.isInWorkingCondition()) {
+				exit = true;
 				printDamagedPart(part.getType(), part.getCondition());
 			}
 		}
+
+		if (exit) System.exit(-1);
+
+		System.out.println("Car Diagnostics Check: OKAY");
 	}
 
 	private void printMissingPart(PartType partType, Integer count) {

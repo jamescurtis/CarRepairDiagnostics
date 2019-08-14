@@ -22,7 +22,7 @@ public class Car {
 		int fuelFilter = 0;
 		int oilFilter = 0;
 		Map<PartType, Integer> missingParts = new HashMap<>();
-		for (Part part : parts) {
+		for (Part part : this.getParts()) {
 			switch (part.getType()) {
 				case ELECTRICAL:
 					electrical++;
@@ -61,7 +61,6 @@ public class Car {
 		if (oilFilter < 1) {
 			missingParts.put(PartType.OIL_FILTER, 1);
 		} else if (oilFilter > 1) throw new IllegalArgumentException("Too many oil filters.");
-
 
 		return missingParts;
 	}
