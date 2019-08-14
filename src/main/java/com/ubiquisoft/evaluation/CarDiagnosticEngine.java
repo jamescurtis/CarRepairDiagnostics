@@ -9,37 +9,29 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 public class CarDiagnosticEngine {
 
 	public void executeDiagnostics(Car car) {
-		/*
-		 * Implement basic diagnostics and print results to console.
-		 *
-		 * The purpose of this method is to find any problems with a car's data or parts.
-		 *
-		 * Diagnostic Steps:
-		 *      First   - Validate the 3 data fields are present, if one or more are
-		 *                then print the missing fields to the console
-		 *                in a similar manner to how the provided methods do.
-		 *
-		 *      Second  - Validate that no parts are missing using the 'getMissingPartsMap' method in the Car class,
-		 *                if one or more are then run each missing part and its count through the provided missing part method.
-		 *
-		 *      Third   - Validate that all parts are in working condition, if any are not
-		 *                then run each non-working part through the provided damaged part method.
-		 *
-		 *      Fourth  - If validation succeeds for the previous steps then print something to the console informing the user as such.
-		 * A damaged part is one that has any condition other than NEW, GOOD, or WORN.
-		 *
-		 * Important:
-		 *      If any validation fails, complete whatever step you are actively one and end diagnostics early.
-		 *
-		 * Treat the console as information being read by a user of this application. Attempts should be made to ensure
-		 * console output is as least as informative as the provided methods.
-		 */
+		List<String> missingFields = car.getMissingCarFields();
+		if (!missingFields.isEmpty()) {
+			car.getMissingCarFields().forEach(this::printMissingCarField);
+			System.exit(-1);
+		}
 
+		Map<PartType, Integer> missingParts = car.getMissingPartsMap();
+		if (!missingParts.isEmpty()) {
+			car.getMissingPartsMap().forEach(this::printMissingPart);
+			System.exit(-1);
+		}
 
+		for (Part part : car.getParts()) {
+			if (!part.isInWorkingCondition()) {
+				printDamagedPart(part.getType(), part.getCondition());
+			}
+		}
 	}
 
 	private void printMissingPart(PartType partType, Integer count) {
@@ -54,6 +46,10 @@ public class CarDiagnosticEngine {
 		if (condition == null) throw new IllegalArgumentException("ConditionType must not be null");
 
 		System.out.println(String.format("Damaged Part Detected: %s - Condition: %s", partType, condition));
+	}
+
+	private void printMissingCarField(String field) {
+		System.out.println(String.format("Missing Car Field Detected: " + field));
 	}
 
 	public static void main(String[] args) throws JAXBException {

@@ -1,7 +1,7 @@
 # Ubiquisoft Back End Developer Test (Car Repair Diagnostics)
 
 Welcome to the Ubiquisoft Back End developer test.
-We anticiapte this will take approximately 20 minutes if tools are already installed locally.
+We anticipate this will take approximately 20 minutes if tools are already installed locally.
 
 ## Basic Instructions
 

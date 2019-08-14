@@ -3,8 +3,7 @@ package com.ubiquisoft.evaluation.domain;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -17,21 +16,62 @@ public class Car {
 	private List<Part> parts;
 
 	public Map<PartType, Integer> getMissingPartsMap() {
-		/*
-		 * Return map of the part types missing.
-		 *
-		 * Each car requires one of each of the following types:
-		 *      ENGINE, ELECTRICAL, FUEL_FILTER, OIL_FILTER
-		 * and four of the type: TIRE
-		 *
-		 * Example: a car only missing three of the four tires should return a map like this:
-		 *
-		 *      {
-		 *          "TIRE": 3
-		 *      }
-		 */
+		int tires = 0;
+		int engine = 0;
+		int electrical = 0;
+		int fuelFilter = 0;
+		int oilFilter = 0;
+		Map<PartType, Integer> missingParts = new HashMap<>();
+		for (Part part : parts) {
+			switch (part.getType()) {
+				case ELECTRICAL:
+					electrical++;
+					break;
+				case TIRE:
+					tires++;
+					break;
+				case ENGINE:
+					engine++;
+					break;
+				case FUEL_FILTER:
+					fuelFilter++;
+					break;
+				case OIL_FILTER:
+					oilFilter++;
+					break;
+			}
+		}
 
-		return null;
+		if (tires < 4) {
+			missingParts.put(PartType.TIRE, 4 - tires);
+		} else if (tires > 4) throw new IllegalArgumentException("To many tires");
+
+		if (engine < 1) {
+			missingParts.put(PartType.ENGINE, 1);
+		} else if (engine > 1) throw new IllegalArgumentException("Too many engines.");
+
+		if (electrical < 1) {
+			missingParts.put(PartType.ELECTRICAL, 1);
+		} else if (electrical > 1) throw new IllegalArgumentException("Too many electrical parts.");
+
+		if (fuelFilter < 1) {
+			missingParts.put(PartType.FUEL_FILTER, 1);
+		} else if (fuelFilter > 1) throw new IllegalArgumentException("Too many fuel filters.");
+
+		if (oilFilter < 1) {
+			missingParts.put(PartType.OIL_FILTER, 1);
+		} else if (oilFilter > 1) throw new IllegalArgumentException("Too many oil filters.");
+
+
+		return missingParts;
+	}
+
+	public List<String> getMissingCarFields() {
+		List<String> missingFields = new ArrayList<>();
+		if (year == null || year.isEmpty()) missingFields.add("year");
+		if (make == null || make.isEmpty()) missingFields.add("make");
+		if (model == null || model.isEmpty()) missingFields.add("model");
+		return missingFields;
 	}
 
 	@Override
