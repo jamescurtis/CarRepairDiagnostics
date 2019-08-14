@@ -17,6 +17,11 @@ public class CarDiagnosticEngine {
 	  I.E. LAMDAS, STREAMS, FILTERS, ETC ...
 	  SO I KEPT THAT TO THE MINIMUM AND
 	*/
+	/*
+	  ALSO, NORMALLY UT'S ARE REQUIRED AND ITS BEST TO PRACTICE TDD
+	  BUT THEY ARE OMITTED BECAUSE THIS IS A 2O MINUTES ASSIGNMENT AND
+	  THERE WAS NOT ANY UT'S SCAFFOLDING SO I ASSUMED YOU DID NOT WANT UT'S
+	 */
 	public void executeDiagnostics(Car car) {
 		List<String> missingFields = car.getMissingCarFields();
 		if (!missingFields.isEmpty()) {
