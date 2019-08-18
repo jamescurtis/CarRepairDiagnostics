@@ -15,35 +15,29 @@ import java.util.Map;
 public class CarDiagnosticEngine {
 	/*I WANTED TO KEEP THIS STUPID SIMPLE, SURE THERE ARE OTHER WAYS TO DO IT.
 	  I.E. LAMDAS, STREAMS, FILTERS, ETC ...
-	  SO I KEPT THAT TO THE MINIMUM AND
-	*/
-	/*
+	  SO I KEPT THAT TO THE MINIMUM.
 	  ALSO, NORMALLY UT'S ARE REQUIRED AND ITS BEST TO PRACTICE TDD
 	  BUT THEY ARE OMITTED BECAUSE THIS IS A 2O MINUTES ASSIGNMENT AND
 	  THERE WAS NOT ANY UT'S SCAFFOLDING SO I ASSUMED YOU DID NOT WANT UT'S
 	 */
-	public void executeDiagnostics(Car car) {
+	public void executeDiagnostics(Car car) throws JAXBException {
 		List<String> missingFields = car.getMissingCarFields();
 		if (!missingFields.isEmpty()) {
-			car.getMissingCarFields().forEach(this::printMissingCarField);
+			missingFields.forEach(this::printMissingCarField);
 			System.exit(-1);
 		}
 
 		Map<PartType, Integer> missingParts = car.getMissingPartsMap();
 		if (!missingParts.isEmpty()) {
-			car.getMissingPartsMap().forEach(this::printMissingPart);
+			missingParts.forEach(this::printMissingPart);
 			System.exit(-1);
 		}
 
-		boolean exit = false;
-		for (Part part : car.getParts()) {
-			if (!part.isInWorkingCondition()) {
-				exit = true;
-				printDamagedPart(part.getType(), part.getCondition());
-			}
+		Map<PartType, ConditionType> nonWorkingParts = car.getNonWorkingParts();
+		if (!nonWorkingParts.isEmpty()) {
+			nonWorkingParts.forEach(this::printDamagedPart);
+			System.exit(-1);
 		}
-
-		if (exit) System.exit(-1);
 
 		System.out.println("Car Diagnostics Check: OKAY");
 	}

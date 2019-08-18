@@ -1,8 +1,12 @@
 package com.ubiquisoft.evaluation.domain;
 
+import com.ubiquisoft.evaluation.utility.RequirementsBuilder;
+
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.*;
 
 @XmlRootElement
@@ -15,52 +19,24 @@ public class Car {
 
 	private List<Part> parts;
 
-	public Map<PartType, Integer> getMissingPartsMap() {
-		int tires = 0;
-		int engine = 0;
-		int electrical = 0;
-		int fuelFilter = 0;
-		int oilFilter = 0;
-		Map<PartType, Integer> missingParts = new HashMap<>();
+	public Map<PartType, Integer> getMissingPartsMap() throws JAXBException {
+
+		Map<PartType, Integer> missingParts = RequirementsBuilder.build().getRequirementsMap();
 		for (Part part : this.getParts()) {
-			switch (part.getType()) {
-				case ELECTRICAL:
-					electrical++;
-					break;
-				case TIRE:
-					tires++;
-					break;
-				case ENGINE:
-					engine++;
-					break;
-				case FUEL_FILTER:
-					fuelFilter++;
-					break;
-				case OIL_FILTER:
-					oilFilter++;
-					break;
+			if (missingParts.containsKey(part.getType())) {
+				if (missingParts.get(part.getType()) == 1) {
+					missingParts.remove(part.getType());
+				} else if (missingParts.get(part.getType()) > 1) {
+					missingParts.put(part.getType(), missingParts.get(part.getType()) - 1);
+				}
+			} else {
+				System.err.println("Unknown part found: "
+						+ part.toString()
+						+ ". Car has to many parts of the same type or part type is unknown"
+				);
 			}
+
 		}
-
-		if (tires < 4) {
-			missingParts.put(PartType.TIRE, 4 - tires);
-		} else if (tires > 4) throw new IllegalArgumentException("To many tires");
-
-		if (engine < 1) {
-			missingParts.put(PartType.ENGINE, 1);
-		} else if (engine > 1) throw new IllegalArgumentException("Too many engines.");
-
-		if (electrical < 1) {
-			missingParts.put(PartType.ELECTRICAL, 1);
-		} else if (electrical > 1) throw new IllegalArgumentException("Too many electrical parts.");
-
-		if (fuelFilter < 1) {
-			missingParts.put(PartType.FUEL_FILTER, 1);
-		} else if (fuelFilter > 1) throw new IllegalArgumentException("Too many fuel filters.");
-
-		if (oilFilter < 1) {
-			missingParts.put(PartType.OIL_FILTER, 1);
-		} else if (oilFilter > 1) throw new IllegalArgumentException("Too many oil filters.");
 
 		return missingParts;
 	}
@@ -71,6 +47,17 @@ public class Car {
 		if (make == null || make.isEmpty()) missingFields.add("make");
 		if (model == null || model.isEmpty()) missingFields.add("model");
 		return missingFields;
+	}
+
+
+	public Map<PartType, ConditionType> getNonWorkingParts() {
+		Map<PartType, ConditionType> nonWorkingParts = new HashMap<>();
+		for (Part part : this.getParts()) {
+			if (!part.isInWorkingCondition()) {
+				nonWorkingParts.put(part.getType(), part.getCondition());
+			}
+		}
+		return nonWorkingParts;
 	}
 
 	@Override

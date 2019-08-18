@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<requirement>
+	<parts>
+		<type>ELECTRICAL</type>
+		<quantity>1</quantity>
+	</parts>
+	<parts>
+		<type>ENGINE</type>
+		<quantity>1</quantity>
+	</parts>
+	<parts>
+		<type>TIRE</type>
+		<quantity>4</quantity>
+	</parts>
+	<parts>
+		<type>FUEL_FILTER</type>
+		<quantity>1</quantity>
+	</parts>
+	<parts>
+		<type>OIL_FILTER</type>
+		<quantity>1</quantity>
+	</parts>
+</requirement>
